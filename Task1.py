@@ -35,6 +35,10 @@ class Event:
     def event_date(self):
         return self.__event_date
 
+    @property
+    def tickets_left(self):
+        return self.__tickets_left
+
     def __del__(self):
         """Update info on sold tickets and tickets, that remain"""
         with open(self.event_info_file, "r") as inp:
@@ -43,7 +47,7 @@ class Event:
         with open(self.event_info_file, "w") as out:
             json.dump(info, out, indent=4)
         with open(self.tickets_storage, "w") as log:
-            json.dump(self.__data, log)
+            json.dump(self.__data, log, indent=4)
 
     def __str__(self):
         return f'Event: {self.name}, happens on {self.event_date}, tickets left: {self.__tickets_left}, ' \
@@ -105,9 +109,6 @@ class Ticket:
     client_name: str
     price: float
     ticket_id: int
-
-    def get_price(self):
-        return self.price
 
 
 @dataclasses.dataclass(frozen=True)
