@@ -8,6 +8,7 @@ ADVANCED_COEF = 0.6
 LATE_COEF = 1.1
 # Constants for calculating price of different types of tickets
 
+
 class Event:
     """Class for getting info about event from json, storing it and creating tickets"""
 
@@ -82,11 +83,11 @@ class Event:
             raise TypeError("Buyer should be customer type!")
         price = self.__base_price
         if customer.is_student:
-            return round(price * 0.5, 2)
+            return round(price * STUDENT_COEF, 2)
         elif self.event_date - customer.date > timedelta(60):
-            return round(price * 0.6, 2)
+            return round(price * ADVANCED_COEF, 2)
         elif self.event_date - customer.date < timedelta(10):
-            return round(price * 1.1, 2)
+            return round(price * LATE_COEF, 2)
         else:
             return price
 
