@@ -3,6 +3,10 @@ import json
 import os
 from datetime import datetime, timedelta
 
+STUDENT_COEF = 0.5
+ADVANCED_COEF = 0.6
+LATE_COEF = 1.1
+# Constants for calculating price of different types of tickets
 
 class Event:
     """Class for getting info about event from json, storing it and creating tickets"""
@@ -116,7 +120,7 @@ class AdvanceTicket(Ticket):
     """A subclass for tickets bought in 60 or more days advance"""
 
     def __post_init__(self):
-        object.__setattr__(self, "price", round(self.price * 0.6, 2))
+        object.__setattr__(self, "price", round(self.price * ADVANCED_COEF, 2))
 
 
 @dataclasses.dataclass(frozen=True)
@@ -124,7 +128,7 @@ class StudentTicket(Ticket):
     """A subclass for tickets bought by students"""
 
     def __post_init__(self):
-        object.__setattr__(self, "price", round(self.price * 0.5, 2))
+        object.__setattr__(self, "price", round(self.price * STUDENT_COEF, 2))
 
 
 @dataclasses.dataclass(frozen=True)
@@ -132,7 +136,7 @@ class LateTicket(Ticket):
     """A subclass for tickets bought 10 days or later before the event"""
 
     def __post_init__(self):
-        object.__setattr__(self, "price", round(self.price * 1.1, 2))
+        object.__setattr__(self, "price", round(self.price * LATE_COEF, 2))
 
 
 def main():
