@@ -34,5 +34,17 @@
         "client_name": "Mark",
         "price": 25.0,
         "ticket_id": 6
+    },
+    {
+        "event": "Concert",
+        "client_name": "John",
+        "price": 50,
+        "ticket_id": 7
+    },
+    {
+        "event": "Concert",
+        "client_name": "Mark",
+        "price": 25.0,
+        "ticket_id": 8
     }
 ]

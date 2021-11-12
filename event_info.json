@@ -1,6 +1,6 @@
 {
     "event_name": "Concert",
-    "max_tickets": 2,
+    "max_tickets": 0,
     "year": 2021,
     "month": 5,
     "day": 20,

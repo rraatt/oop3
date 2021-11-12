@@ -3,6 +3,8 @@ import json
 import os
 from datetime import datetime, timedelta
 
+DAYS__FOR_ADVANCED = 60
+DAYS_FOR_LATE = 10
 STUDENT_COEF = 0.5
 ADVANCED_COEF = 0.6
 LATE_COEF = 1.1
@@ -67,9 +69,9 @@ class Event:
             return None
         if customer.is_student:
             res = StudentTicket(self.name, customer.name, self.__base_price, len(self.__data)+1)
-        elif self.event_date - customer.date > timedelta(60):
+        elif self.event_date - customer.date > timedelta(DAYS__FOR_ADVANCED):
             res = AdvanceTicket(self.name, customer.name, self.__base_price, len(self.__data)+1)
-        elif self.event_date - customer.date < timedelta(10):
+        elif self.event_date - customer.date < timedelta(DAYS_FOR_LATE):
             res = LateTicket(self.name, customer.name, self.__base_price, len(self.__data)+1)
         else:
             res = Ticket(self.name, customer.name, self.__base_price, len(self.__data)+1)
@@ -84,9 +86,9 @@ class Event:
         price = self.__base_price
         if customer.is_student:
             return round(price * STUDENT_COEF, 2)
-        elif self.event_date - customer.date > timedelta(60):
+        elif self.event_date - customer.date > timedelta(DAYS__FOR_ADVANCED):
             return round(price * ADVANCED_COEF, 2)
-        elif self.event_date - customer.date < timedelta(10):
+        elif self.event_date - customer.date < timedelta(DAYS_FOR_LATE):
             return round(price * LATE_COEF, 2)
         else:
             return price
@@ -150,6 +152,7 @@ def main():
     ticket = concert.get_ticket(john)
     ticket2 = concert.get_ticket(mark)
     print(ticket)
+    print(ticket.price)
     print(concert.search_by_id(3))
 
 
