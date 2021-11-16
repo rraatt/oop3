@@ -3,6 +3,7 @@ import os
 import dataclasses
 from datetime import datetime
 
+ADDON_PRICE = 5
 
 class Kitchen:
     """Class for getting info on ingredients quantity, storing it and handling order creation"""
@@ -34,7 +35,7 @@ class Kitchen:
             raise TypeError("Client should be customer type")
         price = 100
         if kwargs:
-            price += len(kwargs)*5
+            price += len(kwargs)*ADDON_PRICE
         match customer.date.weekday():
             case 0:
                 obj = Mondaypizza(price, **kwargs)
