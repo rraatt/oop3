@@ -3,21 +3,26 @@ import os
 import dataclasses
 from datetime import datetime
 
+BASE_PRICE = 100
 ADDON_PRICE = 5
 
 class Kitchen:
     """Class for getting info on ingredients quantity, storing it and handling order creation"""
-    def __init__(self, stock_info):
+    def __init__(self, stock_info, log_input):
         if not os.path.isfile(stock_info):
             raise ValueError("Kitchen stock info doesnt exist")
         self.file_name = stock_info
+        self.log_name = log_input
         with open(stock_info, "r") as inp:
             self.stock_info = json.load(inp)
+        self.today_orders = []
 
     def __del__(self):
         """Update info on used products"""
         with open(self.file_name, "w") as upd:
             json.dump(self.stock_info, upd, indent=4)
+        with open(self.log_name, "w") as log:
+            json.dump(self.today_orders, log, indent=4)
 
     def available_addons(self, customer):
         """Getting info on available addons based on day of the week and ingredients availability"""
@@ -33,9 +38,7 @@ class Kitchen:
         """Create an order and subtract used up ingredients"""
         if not isinstance(customer, Customer):
             raise TypeError("Client should be customer type")
-        price = 100
-        if kwargs:
-            price += len(kwargs)*ADDON_PRICE
+        price = BASE_PRICE + len(kwargs)*ADDON_PRICE
         match customer.date.weekday():
             case 0:
                 obj = Mondaypizza(price, **kwargs)
@@ -57,6 +60,7 @@ class Kitchen:
                 self.stock_info[keys] -= required[keys]
                 if self.stock_info[keys] < 0:
                     raise ValueError("Required products not in stock")
+            self.today_orders.append(dataclasses.asdict(obj))
         return obj
 
 
@@ -132,7 +136,8 @@ class Weekendpizza(Pizzabase):
 
 def main():
     file = "kitchen.json"
-    rest = Kitchen(file)
+    log = "oders.json"
+    rest = Kitchen(file, log)
     maks = Customer("Maksim", datetime.now())
     print(rest.available_addons(maks))
     order = rest.get_order(maks, ham=1, pork=1)
