@@ -6,6 +6,7 @@ from datetime import datetime
 BASE_PRICE = 100
 ADDON_PRICE = 5
 
+
 class Kitchen:
     """Class for getting info on ingredients quantity, storing it and handling order creation"""
     def __init__(self, stock_info, log_input):
@@ -14,13 +15,13 @@ class Kitchen:
         self.file_name = stock_info
         self.log_name = log_input
         with open(stock_info, "r") as inp:
-            self.stock_info = json.load(inp)
+            self.__stock_info = json.load(inp)
         self.today_orders = []
 
     def __del__(self):
         """Update info on used products"""
         with open(self.file_name, "w") as upd:
-            json.dump(self.stock_info, upd, indent=4)
+            json.dump(self.__stock_info, upd, indent=4)
         with open(self.log_name, "w") as log:
             json.dump(self.today_orders, log, indent=4)
 
@@ -28,10 +29,10 @@ class Kitchen:
         """Getting info on available addons based on day of the week and ingredients availability"""
         addons = []
         base_required = dataclasses.asdict(self.get_order(customer, True))
-        for keys in self.stock_info.keys():
-            if self.stock_info[keys] > 1:
-                if self.stock_info[keys] - base_required[keys] > 0:
-                    addons.append((keys, self.stock_info[keys]))
+        for keys in self.__stock_info.keys():
+            if self.__stock_info[keys] > 1:
+                if self.__stock_info[keys] - base_required[keys] > 0:
+                    addons.append((keys, self.__stock_info[keys]))
         return addons
 
     def get_order(self, customer, *check, **kwargs):
@@ -57,8 +58,8 @@ class Kitchen:
             for keys in required.keys():
                 if keys == 'price':
                     continue
-                self.stock_info[keys] -= required[keys]
-                if self.stock_info[keys] < 0:
+                self.__stock_info[keys] -= required[keys]
+                if self.__stock_info[keys] < 0:
                     raise ValueError("Required products not in stock")
             self.today_orders.append(dataclasses.asdict(obj))
         return obj
